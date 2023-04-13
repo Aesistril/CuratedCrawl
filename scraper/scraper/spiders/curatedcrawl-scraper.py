@@ -47,7 +47,14 @@ class CuratedCrawlSpider(CrawlSpider):
     )
 
     def output_item(self, response):
-        yield {'url': response.url}
+        domain = tldextract.extract(response.url)
+
+        if domain not in linkcount:
+            linkcount[domain] = 0
+
+        if response.meta.get('depth', 0) <= int(self.depth)  and linkcount[domain] <= int(self.linksperdomain):
+            linkcount[domain] += 1
+            yield {'url': response.url}
 
 # while True:
 #     for url in discovered_urls:
