@@ -1,7 +1,7 @@
 # Project Status
 Roots aren't deep but seeds are planted. There is still a long way to go until the first beta release let alone stable.
 
-This isn't the start of this project. There was a long gone scraper I wrote with BeautilfulSoup which just sucked. Luckily I burried it 3 kilometers down, next to Margaret Thatcher.
+This isn't the start of this project. There was a long gone scraper I wrote with BeautilfulSoup which just sucked. Luckily I burried it 3 kilometers deep, next to Margaret Thatcher.
 
 Though to be optimistic, most ideas have formed so there will be way less rebasing and rewriting from now on.
 
@@ -11,7 +11,7 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 - Adopt `domainadd.sh` and `download_blacklist.sh` to MySQL
 - Implement whitelist, which will allow domains even if they are in top 1M list. Possible addition to `download_blacklist.sh`
 - Rename `download_blacklist.sh` to `update_blacklist.sh` in case of changes in functionality
-- MySQL database creation script
+- MySQL schema
 #### Moderator Tools
 - Add link previews to modtool
 - Fix the empty link bug
@@ -25,8 +25,10 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 #### Documentation
 - Create README.md
 - Document build process for prebuilt files like modtoolui.py
+- Document database rows
 #### Security
 - Prevent DoS attacks that uses form spamming
+- Database input sanitization
 #### Web
 - Create the goddamn app first
 #### UX
