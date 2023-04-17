@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `blacklist`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `blacklist` (
   `index` int(10) NOT NULL AUTO_INCREMENT,
-  `domain` text DEFAULT NULL,
+  `entry` text DEFAULT NULL,
   `source` varchar(16) DEFAULT NULL,
   `type` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`index`)
@@ -57,4 +57,4 @@ CREATE TABLE `domains` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-17 23:14:14
+-- Dump completed on 2023-04-17 23:21:26
