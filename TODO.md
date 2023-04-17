@@ -8,9 +8,6 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 # Not Done Yet
 #### Data management
 - Tie everything together with MySQL, get rid of .csv madness
-- Adopt `domainadd.sh` and `download_blacklist.sh` to MySQL
-- Implement whitelist, which will allow domains even if they are in top 1M list. Possible addition to `download_blacklist.sh`
-- Rename `download_blacklist.sh` to `update_blacklist.sh` in case of changes in functionality
 - MySQL schema
 #### Moderator Tools
 - Add link previews to modtool
