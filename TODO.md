@@ -15,7 +15,6 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 - Add text scraping
 - Rename to curatedcrawl-crawler. Scraper is something else
 - Adopt to MySQL
-- Put `depth` and `linkspersite` into a config file where it's changed less (caused by: Implement not searching already crawled sites)
 - Seperate site discovery and text scraping with cli args
 #### Documentation
 - Create README.md
@@ -50,6 +49,7 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 - Adopt to MySQL
 #### Crawler
 - Implement depth and links per site variables for faster domain discovery
+- Put `depth` and `linkspersite` into a config file where it's changed less (caused by: Implement not searching already crawled sites)
 - Implement subdomain blocking
 #### Documentation
 - Document autocreated .csv files
