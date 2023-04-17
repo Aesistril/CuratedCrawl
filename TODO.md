@@ -11,9 +11,10 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 - MySQL schema
 #### Moderator Tools
 - Add link previews to modtool
-#### Scraper
+#### Crawler
 - Implement not searching already crawled sites
 - Add text scraping
+- Rename to curatedcrawl-crawler. Scraper is something else
 - Adopt to MySQL
 - Put `depth` and `linkspersite` into a config file where it's changed less (caused by: Implement not searching already crawled sites)
 - Seperate site discovery and text scraping with cli args
@@ -47,7 +48,7 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 - Selenium error handling
 - Fix the empty link bug
 - Adopt to MySQL
-#### Scraper
+#### Crawler
 - Implement depth and links per site variables for faster domain discovery
 - Implement subdomain blocking
 #### Documentation
