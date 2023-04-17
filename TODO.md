@@ -14,8 +14,6 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 - MySQL schema
 #### Moderator Tools
 - Add link previews to modtool
-- Fix the empty link bug
-- Adopt to MySQL
 #### Scraper
 - Implement not searching already crawled sites
 - Add text scraping
@@ -50,6 +48,8 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 - Prevent pages from rendering twice
 - Fix browser link opening bug
 - Selenium error handling
+- Fix the empty link bug
+- Adopt to MySQL
 #### Scraper
 - Implement depth and links per site variables for faster domain discovery
 - Implement subdomain blocking
