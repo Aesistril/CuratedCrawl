@@ -8,7 +8,6 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 # Not Done Yet
 #### Data management
 - Tie everything together with MySQL, get rid of .csv madness
-- MySQL schema
 #### Moderator Tools
 - Add link previews to modtool
 #### Crawler
@@ -37,6 +36,7 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 
 # Done
 #### Data management
+- MySQL schema
 - Write a script to merge newly found domains with old ones
 - Implement .csv output
 - Download top 1M manually to avoid ToS issues
