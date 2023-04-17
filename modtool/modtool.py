@@ -90,7 +90,7 @@ def allow_retro_domain(url):
 # Write domain to blacklist domains file
 def blacklist_domain(url):
     cursor.execute('DELETE FROM domains WHERE domain = %s', (url,))
-    cursor.execute('INSERT INTO blacklist (domain, source) VALUES (%s, "MODERATOR")', (url,))
+    cursor.execute('INSERT INTO blacklist (domain, source, type) VALUES (%s, "MODERATOR", "DOMAIN")', (url,))
     print("Blacklisted: " + url)
 
 # Override UI that has been derived from modtoolui.mainframe
