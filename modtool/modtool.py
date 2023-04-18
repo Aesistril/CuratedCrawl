@@ -105,6 +105,8 @@ class UiFrame(modtoolui.mainframe):
     def skip_next(self):
         self.domindex += 1
         if self.domindex == len(ask_domains):
+            cursor.close()
+            dbconn.close()
             wx.MessageBox("Every domain has been categorized!", "Info", wx.OK | wx.ICON_INFORMATION)
             self.Close()
         else:
