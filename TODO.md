@@ -7,14 +7,12 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 
 # Not Done Yet
 #### Data management
-- Tie everything together with MySQL, get rid of .csv madness
 #### Moderator Tools
 - Add link previews to modtool
 #### Crawler
+- Optimize and reduce database accesses
 - Implement not searching already crawled sites
 - Add text scraping
-- Rename to curatedcrawl-crawler. Scraper is something else
-- Adopt to MySQL
 - Seperate site discovery and text scraping with cli args
 #### Documentation
 - Create README.md
@@ -37,6 +35,7 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 
 # Done
 #### Data management
+- Tie everything together with MySQL, get rid of .csv madness
 - MySQL schema
 - Write a script to merge newly found domains with old ones
 - Implement .csv output
@@ -50,6 +49,8 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 - Fix the empty link bug
 - Adopt to MySQL
 #### Crawler
+- Rename to curatedcrawl-crawler. Scraper is something else
+- Adopt to MySQL
 - Implement depth and links per site variables for faster domain discovery
 - Put `depth` and `linkspersite` into a config file where it's changed less (caused by: Implement not searching already crawled sites)
 - Implement subdomain blocking

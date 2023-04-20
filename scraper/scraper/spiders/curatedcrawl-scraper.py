@@ -20,48 +20,77 @@
 import tldextract
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
+import mariadb
+from configparser import ConfigParser
 
-src_sites = [line for line in open("crawl_src.csv").read().split("\n") if line != ""]
-blacklist = [line for line in open("blacklist.csv").read().split("\n") if line != ""]
-blacklist_mod = [line for line in open("blacklist_mod.csv").read().split("\n") if line != ""]
-crawled = [line for line in open("crawled.csv").read().split("\n") if line != ""]
-bannedsubdomain = [line for line in open("bannedsubdomain.csv").read().split("\n") if line != ""]
-print(bannedsubdomain)
-bannedsubdomain_regex = []
+# Read globsettings.cfg
+config = ConfigParser()
+config.read("../globsettings.cfg")
+
 linkcount = {}
 
-for sub in bannedsubdomain:
-    bannedsubdomain_regex.append(rf'^https?:\/\/{sub}\.')
+# Connect to MariaDB using settings from globsettings.cfg
+try:
+    dbconn = mariadb.connect(password=config["MariaDB"]["passwd"], user=config["MariaDB"]["user"], host=config["MariaDB"]["host"], port=int(config["MariaDB"]["port"]), database=config["MariaDB"]["database"])
+    dbconn.autocommit = True
+except Exception as err:
+    print(f"Database connection error:\n\n\n{err}")
+    exit(1)
 
-class CuratedCrawlSpider(CrawlSpider):
-    name = 'curatedcrawl-spider'
+cursor = dbconn.cursor()
+
+# Pull domains that hasn't been crawled before and was tagged as RETRO or UNIQ by the moderators and use them to find new websites 
+src_sites = []
+src_domains = []
+for tag in ["RETRO", "UNIQ"]:
+    cursor.execute('SELECT domain FROM domains WHERE type = %s AND crawled = 0', (tag,))
+    rows = cursor.fetchall()
+    for row in rows:
+        src_domains.append(row[0])
+        src_sites.append("https://" + row[0])
+
+# Pull banned domains
+blacklist = []
+cursor.execute('SELECT entry FROM blacklist WHERE type = "DOMAIN"')
+rows = cursor.fetchall()
+for domain in rows:
+    blacklist.append(domain[0])
+
+# Pull and convert banned subdomains list to a list of regex statements
+bannedsubdomain_regex = []
+cursor.execute('SELECT entry FROM blacklist WHERE type = "SUBDOMAIN"')
+rows = cursor.fetchall()
+for sub in rows:
+    bannedsubdomain_regex.append(rf'^https?:\/\/{sub[0]}\.')
+
+class CuratedCrawlCrawler(CrawlSpider):
+    name = 'curatedcrawl-crawler'
     start_urls = src_sites
-    custom_settings = {
-        'FEED_FORMAT': 'csv',
-        'FEED_URI': 'found_urls.csv'
-    }
 
     rules = (
-            Rule(LinkExtractor(deny_domains=blacklist + crawled + blacklist_mod, deny=bannedsubdomain_regex), callback='output_item', follow=True),
-        # Rule(LinkExtractor(deny_domains=blacklist)),
+        Rule(LinkExtractor(deny_domains=blacklist, deny=bannedsubdomain_regex), callback='output_item', follow=True),
     )
 
     def output_item(self, response):
-        domain = tldextract.extract(response.url)
+        tldx = tldextract.extract(response.url)
+        if tldx.subdomain == "":
+            domain = tldx.domain + '.' + tldx.suffix
+        else:
+            domain = tldx.subdomain + "." + tldx.domain + '.' + tldx.suffix
 
         if domain not in linkcount:
             linkcount[domain] = 0
 
-        if response.meta.get('depth', 0) <= int(self.depth)  and linkcount[domain] <= int(self.linksperdomain):
+        if response.meta.get('depth', 0) <= int(config["scraper_discovery"]["depth"]) and linkcount[domain] <= int(config["scraper_discovery"]["links_per_site"]):
             linkcount[domain] += 1
-            yield {'url': response.url}
-
-# while True:
-#     for url in discovered_urls:
-#         if url not in crawled_urls:
-#             print("Crawling: " + url)
-#             crawl(url)
-#     if set(discovered_urls) == set(crawled_urls):
-#         print("All links searched!")
-#         break
-
+            yield {'url': response.url, 'domain': domain, 'depth': response.meta.get('depth', 0)}
+    
+    def closed(self, reason):
+        if reason == 'finished':
+            for domain in src_domains:
+                cursor.execute("UPDATE domains SET crawled = 1 WHERE domain = %s", (domain,))
+            cursor.close()
+            dbconn.close()
+            print('Spider completed normally.')
+        else:
+            print('Spider was terminated. Crawled sites will not be marked as "crawled"')
