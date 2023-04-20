@@ -25,8 +25,10 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 - Database input sanitization
 #### Web
 - Create the goddamn app first
+- Server load/status
 #### UX
 - Create a report system
+- Discord style acknowledgements (thank you for making the world a better place)
 - Option to exclude neocities sites
 #### General Ideas
 - Create a gopher service
