@@ -19,7 +19,6 @@
 
 import tldextract
 from scrapy.spiders import CrawlSpider, Rule
-from scrapy.linkextractors import LinkExtractor
 import mariadb
 from configparser import ConfigParser
 
@@ -57,40 +56,56 @@ for domain in rows:
     blacklist.append(domain[0])
 
 # Pull and convert banned subdomains list to a list of regex statements
-bannedsubdomain_regex = []
+bannedsubdomain = []
 cursor.execute('SELECT entry FROM blacklist WHERE type = "SUBDOMAIN"')
 rows = cursor.fetchall()
 for sub in rows:
-    bannedsubdomain_regex.append(rf'^https?:\/\/{sub[0]}\.')
+    bannedsubdomain.append(sub[0])
 
+blacklist = set(blacklist)
+bannedsubdomain = set(bannedsubdomain)
+
+def tldx_url(url):
+    tldx = tldextract.extract(url)
+
+    if tldx.subdomain == "":
+        fdqn = tldx.domain + '.' + tldx.suffix
+    else:
+        fdqn = tldx.subdomain + "." + tldx.domain + '.' + tldx.suffix
+    
+    fdqn_nosub = tldx.domain + '.' + tldx.suffix
+    return fdqn, tldx.subdomain, fdqn_nosub
+
+def check_blacklist(links):
+    filtered_links = []
+
+    for link in links:
+        fdqn, tldx_subdomain, fdqn_nosub = tldx_url(link.url)
+        if fdqn_nosub not in blacklist and fdqn not in blacklist and tldx_subdomain not in bannedsubdomain:
+            if fdqn not in linkcount:
+                linkcount[fdqn] = 0
+
+            if linkcount[fdqn] <= int(config["scraper_discovery"]["links_per_site"]):
+                linkcount[fdqn] += 1
+                filtered_links.append(link)
+
+    return filtered_links
+    
 class CuratedCrawlCrawler(CrawlSpider):
     name = 'curatedcrawl-crawler'
     start_urls = src_sites
 
     rules = (
-        Rule(LinkExtractor(deny_domains=blacklist, deny=bannedsubdomain_regex), callback='output_item', follow=True),
+        Rule(callback='output_item', follow=True, process_links=check_blacklist),
     )
 
     def output_item(self, response):
-        tldx = tldextract.extract(response.url)
-        if tldx.subdomain == "":
-            domain = tldx.domain + '.' + tldx.suffix
-        else:
-            domain = tldx.subdomain + "." + tldx.domain + '.' + tldx.suffix
-
-        if domain not in linkcount:
-            linkcount[domain] = 0
-
-        if response.meta.get('depth', 0) <= int(config["scraper_discovery"]["depth"]) and linkcount[domain] <= int(config["scraper_discovery"]["links_per_site"]):
-            linkcount[domain] += 1
-            yield {'url': response.url, 'domain': domain, 'depth': response.meta.get('depth', 0)}
+        fdqn, _, _ = tldx_url(response.url)
+        yield {'url': response.url, 'domain': fdqn, 'depth': response.meta.get('depth', 0)}
     
-    def closed(self, reason):
-        if reason == 'finished':
-            for domain in src_domains:
-                cursor.execute("UPDATE domains SET crawled = 1 WHERE domain = %s", (domain,))
-            cursor.close()
-            dbconn.close()
-            print('Spider completed normally.')
-        else:
-            print('Spider was terminated. Crawled sites will not be marked as "crawled"')
+    def spider_closed(self, _):
+        for domain in src_domains:
+            cursor.execute("UPDATE domains SET crawled = 1 WHERE domain = %s", (domain,))
+        cursor.close()
+        dbconn.close()
+        print('Spider completed normally.')
