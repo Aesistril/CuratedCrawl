@@ -92,5 +92,11 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
-# Timeout
 DOWNLOAD_TIMEOUT = 30
+
+from configparser import ConfigParser
+
+config = ConfigParser()
+config.read('../globsettings.cfg')
+
+DEPTH_LIMIT = int(config['scraper_discovery']['depth'])
