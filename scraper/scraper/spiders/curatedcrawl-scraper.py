@@ -68,7 +68,7 @@ bannedsubdomain = set(bannedsubdomain)
 def tldx_url(url):
     tldx = tldextract.extract(url)
 
-    if tldx.subdomain == "":
+    if tldx.subdomain == "" or tldx.subdomain == "www":
         fdqn = tldx.domain + '.' + tldx.suffix
     else:
         fdqn = tldx.subdomain + "." + tldx.domain + '.' + tldx.suffix
