@@ -12,6 +12,7 @@ Though to be optimistic, most ideas have formed so there will be way less rebasi
 - Add link previews to modtool
 - Only add domain to the blacklist (not the whole sub+domain+tld combo)
 #### Crawler
+- Ignore www.
 - Implement not searching already crawled sites
 - Add text scraping
 - Seperate site discovery and text scraping with cli args
