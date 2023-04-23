@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from time import sleep
 import wx
 import modtoolui
 import os
@@ -25,6 +26,8 @@ from selenium.webdriver.firefox.options import Options
 from webbrowser import open as openurl_ext
 from configparser import ConfigParser
 import mariadb
+from threading import Thread
+import os
 
 config = ConfigParser()
 config.read("../globsettings.cfg")
@@ -56,27 +59,72 @@ print(ask_domains)
 for f in os.listdir("./rendered_pages/"): 
     rendered_pages.append(f[:-4])
 
-# Setup selenium for screenshotting
-options = Options()
-options.headless = True
-browser = webdriver.Firefox(options=options)
-browser.set_window_size(1000,700)
+# Spawn childeren and give data mining jobs to the ones who yearn for the mines (HOLY SHIT IS THAT A MOTHERFUCKING ELON MUSK REFERANCE!11?!1??!)(GOT THATCHERED)(BIG CHUNGUS KEANU REEVES WHOLESOME 100)
+def render_thread(thread_id):
+    # Setup selenium for screenshotting
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")
+    browser = webdriver.Chrome(options=options)
+    browser.set_window_size(config['modtool']['render_x'], config['modtool']['render_y'])
+    while True:
+        sleep(1)
+        msg = globals()['rendermsgpipe_'+str(thread_id)]
+        if msg == "Terminate":
+            browser.quit()
+            break
+        elif msg == "Idle":
+            pass
+        elif msg != None:
+            domain = msg
+            try:
+                browser.get("https://" + domain)
+                browser.save_screenshot('./rendered_pages/'+ domain +'.png')
+                print(f"[Thread-{str(thread_id)}] " + "Rendered: " + domain)
+            except: 
+                print(f'Render failed for "{domain}"')
+                options = Options()
+                options.headless = True
+                browser = webdriver.Firefox(options=options)
+                browser.set_window_size(config['modtool']['render_x'], config['modtool']['render_y'])
+            globals()['rendermsgpipe_'+str(thread_id)] = "Idle"
+
+def stream_thread(msg):
+    for id in range(1, int(config['modtool']['threads'])):
+        globals()['rendermsgpipe_'+str(id)] = msg
+
+def check_running():
+    for id in range(1, int(config['modtool']['threads'])):
+        if globals()['rendermsgpipe_'+str(id)] != "Idle":
+            return True
+    return False
+
+def assign_to_idle(job):
+    outer_break = False
+    while True:
+        for id in range(1, int(config['modtool']['threads'])):
+            if globals()['rendermsgpipe_'+str(id)] == "Idle":
+                globals()['rendermsgpipe_'+str(id)] = job
+                outer_break = True
+                break
+        if outer_break: break
+
+stream_thread("Idle")
+
+for id in range(1, int(config['modtool']['threads'])):
+    globals()[f'renderthread-{str(id)}'] = Thread(target=render_thread, args=(id,))
+    globals()[f'renderthread-{str(id)}'].start()
 
 # Render every page that hasn't been rendered before
 for domain in ask_domains:
     if domain not in rendered_pages and domain != "":
-        try:
-            browser.get("https://" + domain)
-            browser.save_screenshot('./rendered_pages/'+ domain +'.png')
-            print("Rendered: " + domain)
-        except: 
-            print(f'Render failed for "{domain}"')
-            options = Options()
-            options.headless = True
-            browser = webdriver.Firefox(options=options)
-            browser.set_window_size(1000,700)
+        assign_to_idle(domain)
 
-browser.close()
+while True:
+    sleep(1)
+    if not check_running():
+        stream_thread("Terminate")
+        break
+
 
 # Write domain to approved domains file
 def allow_uniq_domain(url):
