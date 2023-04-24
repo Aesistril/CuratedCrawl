@@ -82,9 +82,9 @@ def render_thread(thread_id):
                 print(f"[Thread-{str(thread_id)}] " + "Rendered: " + domain)
             except: 
                 print(f'Render failed for "{domain}"')
-                options = Options()
-                options.headless = True
-                browser = webdriver.Firefox(options=options)
+                options = webdriver.ChromeOptions()
+                options.add_argument("--headless")
+                browser = webdriver.Chrome(options=options)
                 browser.set_window_size(config['modtool']['render_x'], config['modtool']['render_y'])
             globals()['rendermsgpipe_'+str(thread_id)] = "Idle"
 
