@@ -32,7 +32,7 @@ import os
 config = ConfigParser()
 config.read("../globsettings.cfg")
 
-# Create rendered pages directory if it doesn't exists
+# Create rendered pages directory if it doesn't exists
 if not os.path.exists("./rendered_pages"):
     os.makedirs("./rendered_pages")
 
@@ -55,13 +55,13 @@ for row in unmod_rows:
 
 print(ask_domains)
 
-# Create rendered_pages list from files in the rendered_pages directory
+# Create rendered_pages list from files in the rendered_pages directory
 for f in os.listdir("./rendered_pages/"): 
     rendered_pages.append(f[:-4])
 
-# Spawn childeren and give data mining jobs to the ones who yearn for the mines (HOLY SHIT IS THAT A MOTHERFUCKING ELON MUSK REFERANCE!11?!1??!)(GOT THATCHERED)(BIG CHUNGUS KEANU REEVES WHOLESOME 100)
+# Spawn childeren and give data mining jobs to the ones who yearn for the mines (HOLY SHIT IS THAT A MOTHERFUCKING ELON MUSK REFERANCE!11?!1??!)(GOT THATCHERED)(BIG CHUNGUS KEANU REEVES WHOLESOME 100)
 def render_thread(thread_id):
-    # Setup selenium for screenshotting
+    # Setup selenium for screenshotting
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
     browser = webdriver.Chrome(options=options)
@@ -126,7 +126,7 @@ while True:
         break
 
 
-# Write domain to approved domains file
+# Write domain to approved domains file
 def allow_uniq_domain(url):
     cursor.execute('UPDATE domains SET type = "UNIQ" WHERE domain = %s', (url,))
     print("Approved Unique: " + url)
@@ -135,21 +135,21 @@ def allow_retro_domain(url):
     cursor.execute('UPDATE domains SET type = "RETRO" WHERE domain = %s', (url,))
     print("Approved Retro: " + url)
 
-# Write domain to blacklist domains file
+# Write domain to blacklist domains file
 def blacklist_domain(url):
     cursor.execute('DELETE FROM domains WHERE domain = %s', (url,))
     cursor.execute('INSERT INTO blacklist (entry, source, type) VALUES (%s, "MODERATOR", "DOMAIN")', (url,))
     print("Blacklisted: " + url)
 
-# Override UI that has been derived from modtoolui.mainframe
+# Override UI that has been derived from modtoolui.mainframe
 class UiFrame(modtoolui.mainframe): 
     def __init__(self,parent):
         modtoolui.mainframe.__init__(self,parent)
         self.domindex = -1
-        # Open the first image
+        # Open the first image
         self.skip_next()
     
-    # Skip to the next image if it's not done, otherwise terminate the app
+    # Skip to the next image if it's not done, otherwise terminate the app
     def skip_next(self):
         self.domindex += 1
         if self.domindex == len(ask_domains):
@@ -176,7 +176,7 @@ class UiFrame(modtoolui.mainframe):
     def ext_browser_open(self, _):
         openurl_ext(self.entry)
 
-    # Key handler for keyboard support
+    # Key handler for keyboard support
     def keyhandler(self, event):
         match event.GetKeyCode():
             case wx.WXK_LEFT:
