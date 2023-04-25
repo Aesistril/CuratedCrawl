@@ -157,15 +157,16 @@ class UiFrame(modtoolui.mainframe):
     # Skip to the next image if it's not done, otherwise terminate the app
     def skip_next(self):
         self.domindex += 1
-        print(f"Asking the moderator ({str(self.domindex)}/{str(len(ask_domains))})")
         if self.domindex == len(ask_domains):
             cursor.close()
             dbconn.close()
             wx.MessageBox("Every domain has been categorized!", "Info", wx.OK | wx.ICON_INFORMATION)
             self.Close()
         else:
+            print(f"Asking the moderator ({str(self.domindex)}/{str(len(ask_domains))})")
             self.entry = ask_domains[self.domindex]
             self.site_screenshot.SetBitmap(wx.Bitmap("./rendered_pages/" + self.entry + ".png"))
+            self.domain_text.SetLabelText(self.entry)
     
     def allow_site_uniq(self, _):
         allow_uniq_domain(self.entry)

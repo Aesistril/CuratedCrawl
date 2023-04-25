@@ -23,6 +23,11 @@ class mainframe ( wx.Frame ):
 
 		bSizer1 = wx.BoxSizer( wx.VERTICAL )
 
+		self.domain_text = wx.StaticText( self, wx.ID_ANY, u"domain", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.domain_text.Wrap( -1 )
+
+		bSizer1.Add( self.domain_text, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
+
 		bSizer2 = wx.BoxSizer( wx.VERTICAL )
 
 		self.site_screenshot = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, 0 )
