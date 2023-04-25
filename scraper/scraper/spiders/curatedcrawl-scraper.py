@@ -41,7 +41,7 @@ cursor = dbconn.cursor()
 # Pull domains that hasn't been crawled before and was tagged as RETRO or UNIQ by the moderators and use them to find new websites 
 src_sites = []
 src_domains = []
-for tag in ["RETRO", "UNIQ"]:
+for tag in config["scraper_discovery"]["tags"].split(","):
     cursor.execute('SELECT domain FROM domains WHERE type = %s AND crawled = 0', (tag,))
     rows = cursor.fetchall()
     for row in rows:
