@@ -22,7 +22,6 @@ import wx
 import modtoolui
 import os
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 from webbrowser import open as openurl_ext
 from configparser import ConfigParser
 import mariadb
@@ -62,9 +61,10 @@ for f in os.listdir("./rendered_pages/"):
 # Spawn childeren and give data mining jobs to the ones who yearn for the mines (HOLY SHIT IS THAT A MOTHERFUCKING ELON MUSK REFERANCE!11?!1??!)(GOT THATCHERED)(BIG CHUNGUS KEANU REEVES WHOLESOME 100)
 def render_thread(thread_id):
     # Setup selenium for screenshotting
-    options = webdriver.ChromeOptions()
+    options = webdriver.FirefoxOptions()
     options.add_argument("--headless")
-    browser = webdriver.Chrome(options=options)
+    # options.add_argument("--timeout 30000")
+    browser = webdriver.Firefox(options=options)
     browser.set_window_size(config['modtool']['render_x'], config['modtool']['render_y'])
     while True:
         sleep(1)
@@ -82,9 +82,10 @@ def render_thread(thread_id):
                 print(f"[Thread-{str(thread_id)}] " + "Rendered: " + domain)
             except: 
                 print(f'Render failed for "{domain}"')
-                options = webdriver.ChromeOptions()
+                options = webdriver.FirefoxOptions()
                 options.add_argument("--headless")
-                browser = webdriver.Chrome(options=options)
+                # options.add_argument("--timeout 30000")
+                browser = webdriver.Firefox(options=options)
                 browser.set_window_size(config['modtool']['render_x'], config['modtool']['render_y'])
             globals()['rendermsgpipe_'+str(thread_id)] = "Idle"
 
@@ -115,9 +116,13 @@ for id in range(1, int(config['modtool']['threads'])):
     globals()[f'renderthread-{str(id)}'].start()
 
 # Render every page that hasn't been rendered before
+rendercount = 0 
+willrendercount = len([x for x in ask_domains if x not in rendered_pages])
 for domain in ask_domains:
     if domain not in rendered_pages and domain != "":
         assign_to_idle(domain)
+        rendercount += 1
+        print(f"Renderering pages ({str(rendercount)}/{str(willrendercount)})")
 
 while True:
     sleep(1)
@@ -152,6 +157,7 @@ class UiFrame(modtoolui.mainframe):
     # Skip to the next image if it's not done, otherwise terminate the app
     def skip_next(self):
         self.domindex += 1
+        print(f"Asking the moderator ({str(self.domindex)}/{str(len(ask_domains))})")
         if self.domindex == len(ask_domains):
             cursor.close()
             dbconn.close()
