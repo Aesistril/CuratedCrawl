@@ -90,8 +90,8 @@ def check_blacklist(links):
 
     return filtered_links
     
-class CuratedCrawlCrawler(CrawlSpider):
-    name = 'curatedcrawl-crawler'
+class CuratedCrawlDiscovery(CrawlSpider):
+    name = 'curatedcrawl-discover'
     start_urls = src_sites
 
     rules = (
