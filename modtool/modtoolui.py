@@ -40,11 +40,14 @@ class mainframe ( wx.Frame ):
 
 		bSizer6 = wx.BoxSizer( wx.HORIZONTAL )
 
+		self.allow_mblog_button = wx.Button( self, wx.ID_ANY, u"Modern Blog", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer6.Add( self.allow_mblog_button, 2, wx.ALL, 5 )
+
 		self.allow_uniq_button = wx.Button( self, wx.ID_ANY, u"Unique", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer6.Add( self.allow_uniq_button, 2, wx.ALL|wx.EXPAND, 5 )
 
-		self.remove = wx.Button( self, wx.ID_ANY, u"Blacklist", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer6.Add( self.remove, 2, wx.ALL|wx.EXPAND, 5 )
+		self.blacklist_button = wx.Button( self, wx.ID_ANY, u"Blacklist", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer6.Add( self.blacklist_button, 2, wx.ALL|wx.EXPAND, 5 )
 
 		self.allow_retro_button = wx.Button( self, wx.ID_ANY, u"Retro", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer6.Add( self.allow_retro_button, 2, wx.ALL, 5 )
@@ -58,6 +61,11 @@ class mainframe ( wx.Frame ):
 
 		bSizer1.Add( bSizer6, 0, wx.EXPAND, 5 )
 
+		self.keybinds = wx.StaticText( self, wx.ID_ANY, u"Up Arrow: Open In browser  Down Arrow: Blacklist  Left Arrow: Unique  Right Arrow: Retro  CTRL: Modern Blog", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.keybinds.Wrap( -1 )
+
+		bSizer1.Add( self.keybinds, 0, wx.ALL, 5 )
+
 
 		self.SetSizer( bSizer1 )
 		self.Layout()
@@ -67,8 +75,9 @@ class mainframe ( wx.Frame ):
 
 		# Connect Events
 		self.Bind( wx.EVT_CHAR_HOOK, self.keyhandler )
+		self.allow_mblog_button.Bind( wx.EVT_BUTTON, self.allow_site_mblog )
 		self.allow_uniq_button.Bind( wx.EVT_BUTTON, self.allow_site_uniq )
-		self.remove.Bind( wx.EVT_BUTTON, self.remove_site )
+		self.blacklist_button.Bind( wx.EVT_BUTTON, self.remove_site )
 		self.allow_retro_button.Bind( wx.EVT_BUTTON, self.allow_site_retro )
 		self.ext_browser.Bind( wx.EVT_BUTTON, self.ext_browser_open )
 
@@ -78,6 +87,9 @@ class mainframe ( wx.Frame ):
 
 	# Virtual event handlers, override them in your derived class
 	def keyhandler( self, event ):
+		event.Skip()
+
+	def allow_site_mblog( self, event ):
 		event.Skip()
 
 	def allow_site_uniq( self, event ):

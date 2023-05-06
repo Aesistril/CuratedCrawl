@@ -131,6 +131,10 @@ while True:
         break
 
 
+def allow_mblog_domain(url):
+    cursor.execute('UPDATE domains SET type = "MBLOG" WHERE domain = %s', (url,))
+    print("Approved Modern Blog: " + url)
+
 # Write domain to approved domains file
 def allow_uniq_domain(url):
     cursor.execute('UPDATE domains SET type = "UNIQ" WHERE domain = %s', (url,))
@@ -172,6 +176,10 @@ class UiFrame(modtoolui.mainframe):
         allow_uniq_domain(self.entry)
         self.skip_next()
 
+    def allow_site_mblog(self, _):
+        allow_mblog_domain(self.entry)
+        self.skip_next()
+
     def allow_site_retro(self, _):
         allow_retro_domain(self.entry)
         self.skip_next()
@@ -194,6 +202,8 @@ class UiFrame(modtoolui.mainframe):
                 self.remove_site(None)
             case wx.WXK_UP:
                 self.ext_browser_open(None)
+            case wx.WXK_CONTROL:
+                self.allow_site_mblog(None)
             case _:
                 pass
 
