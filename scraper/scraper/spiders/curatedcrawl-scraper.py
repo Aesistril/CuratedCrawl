@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
 
-# The GPLv3 License (GPLv3)
-# 
-# Copyright (c) 2023 Yiğit Ayaz 
-# 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# CuratedCrawl - A search engine with hand picked results
+# Copyright (C) 2023 Yiğit Ayaz
+
+# CuratedCrawl is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option)
+# any later version.
+
+# CuratedCrawl is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+
+# You should have received a copy of the GNU General Public License along
+# with CuratedCrawl. If not, see <http://www.gnu.org/licenses/>.
 
 import tldextract
 from scrapy.spiders import CrawlSpider, Rule
