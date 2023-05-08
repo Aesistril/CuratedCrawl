@@ -76,7 +76,7 @@ def render_thread(thread_id):
         elif msg != None:
             domain = msg
             try:
-                browser.get("https://" + domain)
+                browser.get("http://" + domain)
                 browser.save_screenshot('./rendered_pages/'+ domain +'.png')
                 print(f"[Thread-{str(thread_id)}] " + "Rendered: " + domain)
             except: 
