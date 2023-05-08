@@ -63,7 +63,7 @@ CONCURRENT_REQUESTS_PER_IP = 16
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   "scraper.pipelines.MariaDBPipeline": 300,
+   "scraper.pipelines.MariaDB_DiscoveryPipeline": 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

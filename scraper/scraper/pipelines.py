@@ -9,7 +9,7 @@ from scrapy.exceptions import CloseSpider
 from configparser import ConfigParser
 import mariadb
 
-class MariaDBPipeline:
+class MariaDB_DiscoveryPipeline:
     def open_spider(self, _):
         # Read globsettings.cfg
         config = ConfigParser()
