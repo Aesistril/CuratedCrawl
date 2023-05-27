@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 
-# CuratedCrawl - A search engine with hand picked results
-# Copyright (C) 2023 Yiğit Ayaz
+# Copyright (C) 2023
+# Yiğit Ayaz <yigitayaz262@gmail.com>
+# This file is part of the CuratedCrawl Search Engine.
 
-# CuratedCrawl is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free
-# Software Foundation, either version 3 of the License, or (at your option)
+# The CuratedCrawl is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
 # any later version.
 
-# CuratedCrawl is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-# more details.
+# The CuratedCrawl is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 
-# You should have received a copy of the GNU General Public License along
-# with CuratedCrawl. If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with the CuratedCrawl Search Engine.  If not, see <http://www.gnu.org/licenses/>.
 
 import tldextract
 from scrapy.spiders import CrawlSpider, Rule
@@ -45,7 +46,7 @@ for tag in config["scraper_discovery"]["tags"].split(","):
     rows = cursor.fetchall()
     for row in rows:
         src_domains.append(row[0])
-        src_sites.append("https://" + row[0])
+        src_sites.append("http://" + row[0])
 
 # Pull banned domains
 blacklist = []
