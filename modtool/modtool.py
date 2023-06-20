@@ -63,8 +63,8 @@ def render_thread(thread_id):
     # Setup selenium for screenshotting
     options = webdriver.FirefoxOptions()
     options.add_argument("--headless")
-    # options.add_argument("--timeout 30000")
     browser = webdriver.Firefox(options=options)
+    browser.set_page_load_timeout(int(config['modtool']['page_load_timeout']))
     browser.set_window_size(config['modtool']['render_x'], config['modtool']['render_y'])
     while True:
         sleep(1)
@@ -84,8 +84,8 @@ def render_thread(thread_id):
                 print(f'Render failed for "{domain}"')
                 options = webdriver.FirefoxOptions()
                 options.add_argument("--headless")
-                # options.add_argument("--timeout 30000")
                 browser = webdriver.Firefox(options=options)
+                browser.set_page_load_timeout(int(config['modtool']['page_load_timeout']))
                 browser.set_window_size(config['modtool']['render_x'], config['modtool']['render_y'])
             globals()['rendermsgpipe_'+str(thread_id)] = "Idle"
 
